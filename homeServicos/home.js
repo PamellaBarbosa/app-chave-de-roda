@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React, { Component } from 'react';
 import firebase from 'firebase';
 
@@ -43,12 +43,12 @@ export default class Home extends Component {
             <div style = {estilo.card}>
               <Image source = {require('../img/moto.png')} style = {estilo.img} />
               <Text style = {estilo.subTitulo}>Moto</Text>
-              <div style = {estilo.descricao}>
-                <Text style = {estilo.paragrafo}> Encontre o serviço desejado para a sua moto.</Text>
-              </div>
-              <div>
-                <TouchableOpacity style = {estilo.btn} onPress = { () => this.props.navigation.navigate('atdMoto')}>Saiba mais</TouchableOpacity> 
-              </div>
+                <div style = {estilo.descricao}>
+                  <Text style = {estilo.paragrafo}> Encontre o serviço desejado para a sua moto.</Text>
+                </div>
+                <div>
+                  <TouchableOpacity style = {estilo.btn} onPress = { () => this.props.navigation.navigate('atdMoto')}>Saiba mais</TouchableOpacity> 
+                </div>
             </div>
 
             <div style = {estilo.card}>
@@ -58,25 +58,24 @@ export default class Home extends Component {
                 <Text style = {estilo.paragrafo}> Encontre o serviço desejado para a sua bicicleta.</Text>
               </div>
               <div>
-                <TouchableOpacity style = {estilo.btn} onPress = { () => this.props.navigation.navigate('atdBicicleta')}>Saiba mais</TouchableOpacity> 
+                 <TouchableOpacity style = {estilo.btn} onPress = { () => this.props.navigation.navigate('atdBicicleta')}>Saiba mais</TouchableOpacity> 
               </div>
             </div>
 
             <div style = {estilo.card}>
               <Image source = {require('../img/caminhao.png')} style = {estilo.imgCaminhao} />
-              <Text style = {estilo.subTitulo}>Caminhão</Text>
-              <div style = {estilo.descricao}>
-                <Text style = {estilo.paragrafo}> Encontre o serviço desejado para o seu caminhão.</Text>
-              </div>
-              
-              <div>
-                <TouchableOpacity style = {estilo.btn} onPress = { () => this.props.navigation.navigate('atdCaminhao')}>Saiba mais</TouchableOpacity> 
-              </div>
+                <Text style = {estilo.subTitulo}>Caminhão</Text>
+                <div style = {estilo.descricao}>
+                  <Text style = {estilo.paragrafo}> Encontre o serviço desejado para o seu caminhão.</Text>
+                </div>
+                    
+                <div>
+                  <TouchableOpacity style = {estilo.btn} onPress = { () => this.props.navigation.navigate('atdCaminhao')}>Saiba mais</TouchableOpacity> 
+                </div>
             </div>
+                  
           </div>
-
         </View>
-
         <View>
           <TouchableOpacity style = {estilo.btnVoltar} onPress = { () => this.logOut('')}>Voltar</TouchableOpacity> 
         </View>
@@ -177,7 +176,6 @@ const estilo = StyleSheet.create({
     fontFamily: 'poppins',
     padding: '1px',
     
-  }
-
+  }, 
 });
 

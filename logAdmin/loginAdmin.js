@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator} from 'react-native';
 import firebase from 'firebase';
 
+export default class LoginAdmin extends Component {
 
-export default class Login extends Component {
   constructor() {
     super();
     this.state = { 
@@ -28,9 +28,16 @@ export default class Login extends Component {
     this.setState(state);
   }
 
+  logOut = () => {
+    firebase.auth().signOut().then(() => {
+      this.props.navigation.navigate('Login')
+    })
+    .catch(error => this.setState({ errorMessage: error.message }))
+  }
+
   userLogin = () => {
     if(this.state.user === '' && this.state.password === '') {
-      Alert.alert('Digite detalhes para assinar!')
+      Alert.alert('Digite detalhes necessários!')
       this.setState({
         isLoading: false,
       })
@@ -65,9 +72,9 @@ export default class Login extends Component {
     }
     return(
       <View style = {estilo.container}>
-        <Text style = {estilo.titulo}> Log In </Text>
+        <Text style = {estilo.titulo}> Log Admin </Text>
 
-        <Image source = {require('./img/chaveRoda.png')} style = {estilo.img} />
+        <Image source = {require('../img/chaveRoda.png')} style = {estilo.img} />
 
         <View style = {estilo.box} > 
 
@@ -83,26 +90,10 @@ export default class Login extends Component {
           <View>
             <TouchableOpacity style = {estilo.btn} onPress = { () => this.userLogin('')}>Entrar</TouchableOpacity> 
           </View>
-          
-          <TouchableOpacity onPress = {()=>this.props.navigation.navigate('LoginAdmin')}>
-            <Text style = {estilo.textoDirecionamento}>Entrar como administrador</Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity onPress = {()=>this.props.navigation.navigate('Cadastro')}>
-          <Text style = {estilo.textoDirecionamento2}> Não tem cadastro? Cadastre-se 
-          </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress = {()=>this.props.navigation.navigate('EsquecerSenha')}>
-            <Text style = {estilo.textoDirecionamento2}>Esqueci a senha</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress = {()=>this.props.navigation.navigate('comentario')}>
-            <Text style = {estilo.textoDirecionamento3}>Gostou do app? Deixe um comentário</Text>
-          </TouchableOpacity> 
-
-
-
+          <View>
+            <TouchableOpacity style = {estilo.btnVoltar} onPress = { () => this.props.navigation.navigate('Login')}>Voltar</TouchableOpacity> 
+          </View>
         </View>
 
       </View>
@@ -155,7 +146,21 @@ const estilo = StyleSheet.create({
   },
 
   btn: {
-    width: '120px',
+    width: '98px',
+    height: '20px',
+    backgroundColor: '#a45b15',
+    alignSelf: 'center',
+    textAlign: 'center',
+    margin: '12px',
+    marginBottom: '5px',
+    borderRadius: '20px',
+    color: '#f2f2f2',
+    fontFamily: 'poppins',
+    padding: '1px'
+  },
+
+    btnVoltar: {
+    width: '98px',
     height: '20px',
     backgroundColor: '#a45b15',
     alignSelf: 'center',
@@ -165,7 +170,8 @@ const estilo = StyleSheet.create({
     borderRadius: '20px',
     color: '#f2f2f2',
     fontFamily: 'poppins',
-    padding: '1px'
+    padding: '1px',
+    
   },
 
   titulo: {
@@ -175,28 +181,6 @@ const estilo = StyleSheet.create({
     fontSize: '20px',
     margin: '10px',
     fontFamily: 'poppins'
-  },
-
-  textoDirecionamento: { 
-    color: '#a45b15',
-    marginTop: '30px',
-    textAlign: 'center',
-    fontFamily: 'poppins'
-  },
-
-  textoDirecionamento2: {
-    marginTop: '10px',
-    color: '#a45b15',
-    textAlign: 'center',
-    fontFamily: 'poppins'
-  },
-
-  textoDirecionamento3: {
-    marginTop: '15px',
-    color: '#f2f2f2',
-    textAlign: 'center',
-    fontFamily: 'poppins',
-    fontWeight: 'bold'
   },
 
   img: {

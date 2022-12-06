@@ -1,82 +1,100 @@
-import React, {useState} from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React ,{useState}from 'react';
+import {View, StyleSheet, Text, TouchableOpacity, TextInput} from 'react-native';
+import { white } from '@mui/material/colors';
+import { Checkbox } from 'react-native-paper';
 
-const getFormattedPrice = (price) => `$${price.toFixed(2)}`;
-const getFormattedPrazo = (prazo) => `${prazo}`;
+import db from '../database/firebase'
 
-export const toppings = [
-  {
-    name: "Trocar pneu",
-    price: 80.00,
-    prazo: 1
-  },
-  {
-    name: "Encher pneu",
-    price: 30.00,
-    prazo: 1
-  },
-  {
-    name: "Trocar aro",
-    price: 80.00,
-    prazo: 2
-  },
-  {
-    name: "Remendar pneu",
-    price: 50.00,
-    prazo: 2
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+export default function AtdCarro({ navigation }) {
+
+  let id = []
+  let servico = []
+  let price = []
+  let prazo = []
+  let sumPrazo = 0
+  let sum = 0
+
+  const [atdUm, setAtdUm] = useState(true);
+  const [atdDois, setAtdDois] = useState(true);
+  const [atdTres, setAtdTres] = useState(true);
+  const [atdQuatro, setAtdQuatro] = useState(true);
+
+  const [veiculo, setVeiculo] = useState('');
+  const [valor, setValor] = useState('');
+  const [diasPrazo, setDias] = useState('');
+  const [observacao, setObservacao] = useState('');
+  
+
+  switch(atdUm){
+    case true:
+    id.push(1)
+    servico.push("Trocar pneu")
+    price.push(50.00)
+    prazo.push(1)
+    
+    break;
   }
 
-];
+  switch(atdDois){
+    case true:
+    id.push(2)
+    servico.push("\nEncher pneu")
+    price.push(20.00)
+    prazo.push(1)
 
+    break;
+  }
 
-export default function Carro() {
-  const navigation = useNavigation();
+  switch(atdTres){
+    case true:
+    id.push(3)
+    servico.push("\nTrocar aro")
+    price.push(80.00)
+    prazo.push(2)
 
-  const[checkedState, setCheckedState] = useState(
-    new Array(toppings.length).fill(false)
-  );
+    
+    break;
+  }
 
-  const [total, setTotal] = useState(0);
-  const [totalPrazo, setTotalPrazo] = useState(0);
+  switch(atdQuatro){
+    case true:
+    id.push(4)
+    servico.push("\nRemendar pneu\n")
+    price.push(50.00)
+    prazo.push(2)
 
-  const handleOnChange = (position) => {
-    const updtatedCheckedState = checkedState.map((item, index) =>
-      index === position ? !item : item
-    );
-    setCheckedState(updtatedCheckedState);
+    
+    break;
+  }
 
-    const totalPrice = updtatedCheckedState.reduce(
-      (sum, currentState, index) => {
-        if (currentState === true) {
-          return sum + toppings[index].price;
-        }
-        return sum;
-      },
-      0
-    );
+  for(var i = 0; i < price.length; i++) {
+    sum += price[i];
+  }
 
-    setTotal(totalPrice);
+  for(var totalPrazo = 0; totalPrazo < prazo.length; totalPrazo++) {
+    sumPrazo += prazo[totalPrazo];
+  }
 
-    const totalPrazo = updtatedCheckedState.reduce(
-      (sum, currentState, index) => {
-        if (currentState === true) {
-          return sum + toppings[index].prazo;
-        }
-        return sum;
-      },
-      0
-    );
+  function addAtd(){
 
-    setTotalPrazo(totalPrazo);
+    db.collection('Atendimento Carro').add({
+      id: id,
+      nomeServico: servico,
+      tipoServico: "Carro",
+      valorServico: price,
+      prazo: prazo,
+      horaAgendada: Date()
 
-    const clickCheck = () => {
-      setIsChecked(!isChecked);
-    };
-  };
+    })
+  }
 
   return (
-    <View style = {estilo.container}>
+
+    <View style={estilo.container}>
+
+    <View>
 
       <Text style = {estilo.titulo}>Carro</Text>
 
@@ -88,54 +106,69 @@ export default function Carro() {
         </div>
       </div>
 
-      <div style = {estilo.textVS}>
-        <div style = {estilo.content}> 
-          <div className = "Carro">
-            {toppings.map(({name, price}, index) => {
-              return (
-                <li key = {index}>
-                  <div className = "toppings-list-item">
-                    <div className = "left-section" style={estilo.tiposServicoU} >
-                      <input
-                        type = "checkbox"
-                        id = {`custom-checkbox-${index}`}
-                        name = {name}
-                        value = {name}
-                        checked = {checkedState[index]}
-                        onChange = {() => handleOnChange(index)}
-                      />
-                      <label htmlFor = {`custom-checkbox-${index}`}>{name}</label>
-                    </div>
-                    <div className = "right-section" style={estilo.spanUprecos}>{getFormattedPrice(price)}</div>
-                  </div>
-                </li>
-              );
-            })}      
+      <div style = {estilo.checkItens}>
+        <div >
+          <div >
+            <Text style = {estilo.textServico}>Trocar pneu </Text>
+            <div style = {estilo.spanPrecos}> R$ 50.00</div>
+            <div style = {estilo.check}> 
+                <Checkbox {...label} color="white" status = {atdUm ? 'checked' : 'unchecked'} onPress={() => { setAtdUm(!atdUm)}}> 
+                </Checkbox>
+            </div>
+          </div>
+
+          <div>
+            <Text style = {estilo.textServico}>Encher pneu </Text>
+            <div style = {estilo.spanPrecos}> R$ 20.00</div>
+            <div style = {estilo.check}> 
+            <Checkbox {...label} color="white" status = {atdDois ? 'checked' : 'unchecked'} onPress={() => { setAtdDois(!atdDois)}}> 
+            </Checkbox>
+            </div>
+          </div>
+          <div>
+            <Text style = {estilo.textServico}>Trocar aro</Text>
+            <div style = {estilo.spanPrecos}> R$ 80.00</div>
+            <div style = {estilo.check}> 
+              <Checkbox {...label} color="white" status={atdTres ? 'checked' : 'unchecked'}
+                onPress={() => {setAtdTres(!atdTres)}}/>
+            </div>
+          </div>
+          <div>
+            <Text style = {estilo.textServico}>Remendar pneu</Text>
+            <div style = {estilo.spanPrecos}> R$ 50.00</div>
+            <div style = {estilo.check}> 
+              <Checkbox {...label} color="white" status={atdQuatro ? 'checked' : 'unchecked'}
+                onPress={() => {setAtdQuatro(!atdQuatro)}}/>
+            </div>
           </div>
         </div>
       </div>
-
 
       <div style = {estilo.camposEx}>
 
         <div>
           <Text style = {estilo.camposItens}>Veículo: </Text>
-          <TextInput style={estilo.campo}/>
+          <TextInput value={veiculo}
+          onChangeText={(veiculo) => setVeiculo(veiculo)} style={estilo.campo}/>
         </div>
 
         <div>
-          <Text style = {estilo.camposItens}>Valor: </Text>
-          <div style = {estilo.campo} className = "right-section"> {getFormattedPrice(total)} </div>
+          <Text style = {estilo.camposItens}>Valor: </Text> 
+          <div value={valor}
+          onChangeText={(valor) => setValor(valor)} style={estilo.campoValor}>R$ {sum}</div> 
         </div>
 
         <div>
           <Text style = {estilo.camposItens}>Prazo: </Text>
-          <div style = {estilo.campo}> {getFormattedPrazo(totalPrazo)} </div>
+          <div value={diasPrazo}
+          onChangeText={(diasPrazo) => setDias(diasPrazo)} style={estilo.campo}>{sumPrazo}</div>
         </div>
 
         <div>
           <Text style = {estilo.camposItens}>Observação: </Text>
-          <TextInput style = {estilo.campoComentario} multiline = {true} />
+          <TextInput value={observacao}
+          onChangeText={(observacao) => setObservacao(observacao)}
+          style = {estilo.campoObs} multiline = {true} />
         </div>
 
       </div>
@@ -145,20 +178,31 @@ export default function Carro() {
           <Text style = {estilo.btnVoltar}>Voltar</Text>
         </TouchableOpacity>
       </div>
+      </View>
 
-      <div>
-        <TouchableOpacity onPress = {()=> alert('Agendado com sucesso.')}>
-          <Text style = {estilo.btn}>Enviar</Text>
-        </TouchableOpacity>
-      </div>
+      <TouchableOpacity style={estilo.btnBDs} onPress={() => addAtd(this)}>
+        <Text style = {estilo.textBtn}>Enviar</Text>
+      </TouchableOpacity>
 
+      <TouchableOpacity style={estilo.btn} 
+      onPress={() => 
+            navigation.navigate('agendado', {
+              paramKey1: servico,
+              paramKey2: 'Carro \n',
+              paramKey3: veiculo + '\n',
+              paramKey4: 'R$ ' + sum + '\n',
+              paramKey5: sumPrazo + ' dia (s) \n',
+              paramKey6: observacao + '\n',
+              paramKey7: new Date().toLocaleString()
+            })
+          }>
+        <Text style = {estilo.textBtn}>Visualizar</Text>
+      </TouchableOpacity>
+      
     </View>
   );
 }
-
-
 const estilo = StyleSheet.create({
-
   container: {
     backgroundColor: '#2b3019',
   },
@@ -180,11 +224,6 @@ const estilo = StyleSheet.create({
     
   },
 
-  textVS: {
-    alignSelf: 'center',
-    marginBottom: '50px'
-  },
-
   alinhamentoTexto: {
     textAlign: 'center',  
   },
@@ -197,27 +236,31 @@ const estilo = StyleSheet.create({
     fontFamily: 'poppins',
   },
 
-  content: {
-    marginTop: '32px',
-    display: 'grid',
-    paddingLeft: '50px',
-    
+  checkItens: {
+    alignSelf: 'center',
+    marginTop: '20px',
+    marginBottom: '30px',
   },
 
-  tiposServicoU: {
+  check: {
+    alignSelf: 'center',
+    color: '#f2f2f2',
+    marginTop: '-28px'
+  },
+
+  textServico: {
     fontSize: '18px',
-    marginLeft: '-40px',
     color: '#a45b15',
     fontFamily: 'poppins',
-    
- },
+    marginLeft: '35px',
+  },
 
-  spanUprecos: {
-     color: '#f2f2f2',
-     marginTop: '-18px',
-     marginLeft: '78px',
-     paddingLeft: '50px',
-     fontFamily: 'poppins',
+  spanPrecos: {
+    color: '#f2f2f2',
+    marginTop: '-18px',
+    marginLeft: '130px',
+    paddingLeft: '50px',
+    fontFamily: 'poppins',
   },
 
   camposEx: {
@@ -248,7 +291,17 @@ const estilo = StyleSheet.create({
     display: 'grid',
   },
 
-  campoComentario: {
+  campoValor: {
+    width: '150px',
+    height: '20px',
+    paddingLeft: '5px',
+    backgroundColor: '#f2f2f2',
+    borderRadius: '5px',
+    margin: '8px',
+    display: 'grid',
+  },
+
+  campoObs: {
     width: '150px',
     height: '90px',
     paddingLeft: '5px',
@@ -257,7 +310,7 @@ const estilo = StyleSheet.create({
     margin: '8px',
     display: 'grid',
     padding: '3px',
-    marginBottom: '20px'
+    
   },
 
   btnVoltar: {
@@ -268,7 +321,7 @@ const estilo = StyleSheet.create({
     textAlign: 'center',
     padding: '1px',
     marginBottom: '10px',
-    marginTop: '5px',
+    marginTop: '15px',
     marginLeft: '25px',
     borderRadius: '20px',
     color: '#f2f2f2',
@@ -276,7 +329,21 @@ const estilo = StyleSheet.create({
     fontSize: '15px',
   },
 
-    btn: {
+  btnBDs: {
+    width: '98px',
+    height: '20px',
+    backgroundColor: '#a45b15',
+    alignSelf: 'center',
+    textAlign: 'center',
+    padding: '1px',
+    marginBottom: '10px',
+    marginTop: '5px',
+    marginLeft: '25px',
+    borderRadius: '20px',
+    
+  },
+
+  btn: {
     width: '98px',
     height: '20px',
     backgroundColor: '#a45b15',
@@ -287,9 +354,12 @@ const estilo = StyleSheet.create({
     marginTop: '5px',
     marginLeft: '25px',
     borderRadius: '20px',
-    color: '#f2f2f2',
+    
+  },
+ 
+  textBtn: {
     fontFamily: 'poppins',
     fontSize: '15px',
-  }
-
-})
+    color: '#f2f2f2',
+  },
+});

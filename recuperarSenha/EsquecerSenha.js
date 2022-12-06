@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndi
 import firebase from 'firebase';
 
 
-export default class Login extends Component {
+export default class EsquecerSenha extends Component {
   constructor() {
     super();
     this.state = { 
@@ -85,7 +85,7 @@ export default class Login extends Component {
         </View>
 
         <View>
-          <TouchableOpacity style = {estilo.btn} onPress = { () => this.registerUser('')}>Continuar</TouchableOpacity>
+          <TouchableOpacity style = {estilo.btn} onPress = { () => this.registerUser('')}>Redefinir</TouchableOpacity>
         </View>
 
         <View>
@@ -137,7 +137,7 @@ const estilo = StyleSheet.create({
     borderColor: '#a45b15',
     borderRadius: '20px',
     borderWidth: '2px',
-    marginBottom: '10px',
+    marginBottom: '30px',
     fontFamily: 'poppins'
   },
 
@@ -151,6 +151,7 @@ const estilo = StyleSheet.create({
     borderColor: '#a45b15',
     borderRadius: '20px',
     borderWidth: '2px',
+    marginTop: '-10px',
     marginBottom: '30px',
     fontFamily: 'poppins'
   },
